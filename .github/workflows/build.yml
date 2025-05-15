@@ -1,7 +1,10 @@
-name: Build EXE and Upload via GitHub Release
+name: Build Windows Executable
 
 on:
   push:
+    branches:
+      - main
+  pull_request:
     branches:
       - main
 
@@ -11,32 +14,24 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.10'
+          python-version: '3'  # Change to your desired Python version
 
-      - name: Install PyInstaller and dependencies
+      - name: Install dependencies
         run: |
-          pip install pyinstaller pandas numpy openpyxl xlsxwriter et_xmlfile
+          python -m pip install --upgrade pip
+          pip install pyinstaller
 
-      - name: Build EXE with PyInstaller
-        run: pyinstaller file_inventory.spec
-
-      - name: List contents of dist
+      - name: Build executable
         run: |
-          echo "Dist folder contents:"
-          Get-ChildItem -Recurse -Path dist
+          pyinstaller --onefile file_inventory.py --specpath .
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
         with:
-          tag_name: v1.0.${{ github.run_number }}
-          name: Release v1.0.${{ github.run_number }}
-          draft: false
-          prerelease: false
-          files: dist/file_inventory.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          name: Windows Executable
+          path: dist/file_inventory.exe
