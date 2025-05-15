@@ -1,0 +1,6 @@
+pandas
+openpyxl
+et_xmlfile
+xlsxwriter
+numpy
+pyinstaller
