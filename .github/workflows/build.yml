@@ -31,7 +31,7 @@ jobs:
           pyinstaller --onefile file_inventory.py --specpath .
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: Windows Executable
           path: dist/file_inventory.exe
